@@ -1,0 +1,7 @@
+{
+  "name": "swipeApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
