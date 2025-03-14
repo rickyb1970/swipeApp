@@ -2,12 +2,12 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AnimationController, GestureController, NavController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-details',
+  templateUrl: './details.page.html',
+  styleUrls: ['./details.page.scss'],
   standalone: false,
 })
-export class HomePage {
+export class DetailsPage {
   @ViewChild('swipeArea', { read: ElementRef }) swipeArea!: ElementRef;
 
   constructor(private navCtrl: NavController, private gestureCtrl: GestureController, private animationCtrl: AnimationController) {}
@@ -23,8 +23,14 @@ export class HomePage {
       onStart: () => {},
       onMove: () => {},
       onEnd: (detail) => {
-        if (detail.deltaX < -100) { // Swipe left threshold
-            //  this.navigateToDetails
+        if (detail.deltaX > 100) { // Swipe right threshold
+            // this.navigateBack();
+            this.navCtrl.navigateForward('/details', {
+              animation: {
+                enter: 'animate__animated animate__fadeInRight',
+                leave: 'animate__animated animate__fadeOutLeft',
+              },
+            });
         }
       },
     });
@@ -32,19 +38,19 @@ export class HomePage {
     gesture.enable();
   }
 
-  navigateToDetails() {
-    const enterAnimation = (baseEl: any) => {
+  navigateBack() {
+    const leaveAnimation = (baseEl: any) => {
       const root = baseEl.shadowRoot || baseEl;
 
       const backdropAnimation = this.animationCtrl
         .create()
         .addElement(root.querySelector('ion-backdrop')!)
-        .fromTo('opacity', '0', '1');
+        .fromTo('opacity', '1', '0');
 
       const wrapperAnimation = this.animationCtrl
         .create()
         .addElement(root.querySelector('.modal-wrapper')!)
-        .fromTo('transform', 'translateX(100%)', 'translateX(0%)');
+        .fromTo('transform', 'translateX(0%)', 'translateX(-100%)');
 
       return this.animationCtrl
         .create()
@@ -54,9 +60,9 @@ export class HomePage {
         .addAnimation([backdropAnimation, wrapperAnimation]);
     };
 
-    this.navCtrl.navigateForward('/details', {
+    this.navCtrl.navigateBack('/home', {
       animated: true,
-      animation: enterAnimation,
+      animation: leaveAnimation,
     });
   }
 }
