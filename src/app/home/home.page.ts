@@ -24,7 +24,7 @@ export class HomePage {
       onMove: () => {},
       onEnd: (detail) => {
         if (detail.deltaX < -100) { // Swipe left threshold
-            //  this.navigateToDetails
+            this.navigateToDetails();
         }
       },
     });

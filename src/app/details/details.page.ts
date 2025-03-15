@@ -24,13 +24,9 @@ export class DetailsPage {
       onMove: () => {},
       onEnd: (detail) => {
         if (detail.deltaX > 100) { // Swipe right threshold
-            // this.navigateBack();
-            this.navCtrl.navigateForward('/details', {
-              animation: {
-                enter: 'animate__animated animate__fadeInRight',
-                leave: 'animate__animated animate__fadeOutLeft',
-              },
-            });
+            this.navigateBack();
+        } else if (detail.deltaX < -100) {
+             this.navigateToSettings();
         }
       },
     });
@@ -65,4 +61,34 @@ export class DetailsPage {
       animation: leaveAnimation,
     });
   }
+
+  navigateToSettings() {
+    const leaveAnimation = (baseEl: any) => {
+      const root = baseEl.shadowRoot || baseEl;
+
+      const backdropAnimation = this.animationCtrl
+        .create()
+        .addElement(root.querySelector('ion-backdrop')!)
+        .fromTo('opacity', '1', '0');
+
+      const wrapperAnimation = this.animationCtrl
+        .create()
+        .addElement(root.querySelector('.modal-wrapper')!)
+        .fromTo('transform', 'translateX(100%)', 'translateX(0%)');
+
+      return this.animationCtrl
+        .create()
+        .addElement(baseEl)
+        .easing('cubic-bezier(0.36, 0.66, 0.04, 1)')
+        .duration(500)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+    };
+
+    this.navCtrl.navigateForward('/settings', {
+      animated: true,
+      animation: leaveAnimation,
+    });
+  }
+
+
 }
